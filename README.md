@@ -3,7 +3,7 @@
 ## To run the code:
 ### Windows
 In one terminal, at the same directory of app.py:  
-● python -m virtualenv -p python3.8 venv  
+● python -m virtualenv -p python3.10 venv  
 ● venv\Scripts\activate  
 ● python -m pip install -r requirements.windows.txt  
 ● python server.py  
