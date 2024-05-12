@@ -10,7 +10,7 @@ from hover_template import get_hover_template
 from modes import MODES, MODE_TO_COLUMN
 
 
-def init_figure():
+def init_figure(data):
     '''
         Initializes the Graph Object figure used to display the bar chart.
         Sets the template to be used to "simple_white" as a base with
@@ -20,15 +20,21 @@ def init_figure():
             fig: The figure which will display the bar chart
     '''
     fig = go.Figure()
+    
+    fig = draw(fig, data, 'count')
 
     # TODO : Update the template to include our new theme and set the title
-
     fig.update_layout(
-        template=pio.templates['simple_white'],
+        template=pio.templates["simple_white+mytemplate"],
         dragmode=False,
-        barmode='relative'
+        barmode='relative',
+        title='Lines per act',
+        xaxis = dict(
+            tickmode = 'array',
+            tickvals = [1,2,3,4,5],
+            ticktext = ['Act '+str(i) for i in range(1,6)]
+        )
     )
-
     return fig
 
 
@@ -45,7 +51,24 @@ def draw(fig, data, mode):
     '''
     fig = go.Figure(fig)  # conversion back to Graph Object
     # TODO : Update the figure's data according to the selected mode
-    return fig
+    bar_colors= ['#861388', '#d4a0a7', '#dbd053', '#1b998b', '#A0CED9', '#3e6680']
+    if mode=='count':
+        for act in range(data.Act.max()+1):
+            fig.add_trace(go.Bar(
+                name=data.iloc[act].Player,
+                x=data.loc[data.Player==data.iloc[act].Player].Act,
+                y=data.loc[data.Player==data.iloc[act].Player].LineCount,
+                marker_color=bar_colors[act]
+            ))
+    else:
+        for act in range(data.Act.max()+1):
+            fig.add_trace(go.Bar(
+                name=data.iloc[act].Player,
+                x=data.loc[data.Player==data.iloc[act].Player].Act,
+                y=data.loc[data.Player==data.iloc[act].Player].PercentCount,
+                marker_color=bar_colors[act]
+            ))
+    return fig 
 
 
 def update_y_axis(fig, mode):
@@ -59,3 +82,5 @@ def update_y_axis(fig, mode):
             The updated figure
     '''
     # TODO : Update the y axis title according to the current mode
+    fig=draw(fig, fig.data[0], mode)
+    return fig

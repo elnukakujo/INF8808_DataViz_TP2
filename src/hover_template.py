@@ -26,5 +26,11 @@ def get_hover_template(name, mode):
             The hover template with the elements descibed above
     '''
     # TODO: Generate and return the over template
-
-    return ''
+    
+    """custom=[['<BR><b>Preço: </b> R$ '+str(name.loc[i, name])]
+              for i in name.index]
+    
+    if mode =='count':
+        return ('%{custom}<br><b>Player</b>: %{x}</br><br><b>Lines</b>: %{y}</br>')
+    else:
+        return ('%{name}'+'<br><b>Player</b>: %{x}</br>'+'<br><b>Percent</b>: %{y:.2f}%</br>')"""
