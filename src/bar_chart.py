@@ -21,7 +21,7 @@ def init_figure(data):
     '''
     fig = go.Figure()
     
-    fig = draw(fig, data, 'count')
+    fig = draw(fig, data, MODE_TO_COLUMN[MODES['count']])
 
     # TODO : Update the template to include our new theme and set the title
     fig.update_layout(
@@ -52,22 +52,14 @@ def draw(fig, data, mode):
     fig = go.Figure(fig)  # conversion back to Graph Object
     # TODO : Update the figure's data according to the selected mode
     bar_colors= ['#861388', '#d4a0a7', '#dbd053', '#1b998b', '#A0CED9', '#3e6680']
-    if mode=='count':
-        for act in range(data.Act.max()+1):
-            fig.add_trace(go.Bar(
-                name=data.iloc[act].Player,
-                x=data.loc[data.Player==data.iloc[act].Player].Act,
-                y=data.loc[data.Player==data.iloc[act].Player].LineCount,
-                marker_color=bar_colors[act]
-            ))
-    else:
-        for act in range(data.Act.max()+1):
-            fig.add_trace(go.Bar(
-                name=data.iloc[act].Player,
-                x=data.loc[data.Player==data.iloc[act].Player].Act,
-                y=data.loc[data.Player==data.iloc[act].Player].PercentCount,
-                marker_color=bar_colors[act]
-            ))
+    for act in range(data.Act.max()+1):
+        fig.add_trace(go.Bar(
+            name=data.iloc[act].Player,
+            x=data.loc[data.Player==data.iloc[act].Player].Act,
+            y=data.loc[data.Player==data.iloc[act].Player][f'{mode}'],
+            marker_color=bar_colors[act],
+            hovertemplate=get_hover_template(data.iloc[act].Player, mode),
+        ))
     return fig 
 
 
@@ -82,5 +74,5 @@ def update_y_axis(fig, mode):
             The updated figure
     '''
     # TODO : Update the y axis title according to the current mode
-    fig=draw(fig, fig.data[0], mode)
+    '''fig=draw(fig, fig.data[0], mode)'''
     return fig
