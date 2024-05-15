@@ -30,12 +30,3 @@ def get_hover_template(name, mode):
         return '<span style="font-family: Grenze Gotisch; font-size: 24px; font-color: Black">%{x}</span><br></br>'+f'<b>Player:</b> {name}'+'<br><b>Lines: </b>%{y}</br><extra></extra>'
     else:
         return '<span style="font-family: Grenze Gotisch; font-size: 24px; font-color: Black">%{x}</span><br></br>'+f'<b>Player:</b> {name}'+'<br><b>Lines: </b>%{y}</br><extra></extra>'
-    
-    
-    """custom=[['<BR><b>Preço: </b> R$ '+str(name.loc[i, name])]
-              for i in name.index]
-    
-    if mode =='count':
-        return ('%{custom}<br><b>Player</b>: %{x}</br><br><b>Lines</b>: %{y}</br>')
-    else:
-        return ('%{name}'+'<br><b>Player</b>: %{x}</br>'+'<br><b>Percent</b>: %{y:.2f}%</br>')"""

@@ -10,7 +10,7 @@ from hover_template import get_hover_template
 from modes import MODES, MODE_TO_COLUMN
 
 
-def init_figure(data):
+def init_figure():
     '''
         Initializes the Graph Object figure used to display the bar chart.
         Sets the template to be used to "simple_white" as a base with
@@ -21,11 +21,9 @@ def init_figure(data):
     '''
     fig = go.Figure()
     
-    fig = draw(fig, data, MODE_TO_COLUMN[MODES['count']])
-
     # TODO : Update the template to include our new theme and set the title
     fig.update_layout(
-        template=pio.templates["simple_white+mytemplate"],
+        template=pio.templates["simple_white+mytemplate"], #To use our template with the simple_white template
         dragmode=False,
         barmode='relative',
         title='Lines per act',
@@ -51,16 +49,19 @@ def draw(fig, data, mode):
     '''
     fig = go.Figure(fig)  # conversion back to Graph Object
     # TODO : Update the figure's data according to the selected mode
-    bar_colors= ['#861388', '#d4a0a7', '#dbd053', '#1b998b', '#A0CED9', '#3e6680']
-    for act in range(data.Act.max()+1):
+    fig.data=[]
+    lineMode = MODE_TO_COLUMN[f'{mode}']
+    playerList = data.loc[data.Act==1].Player
+        
+    for player in playerList:
         fig.add_trace(go.Bar(
-            name=data.iloc[act].Player,
-            x=data.loc[data.Player==data.iloc[act].Player].Act,
-            y=data.loc[data.Player==data.iloc[act].Player][f'{mode}'],
-            marker_color=bar_colors[act],
-            hovertemplate=get_hover_template(data.iloc[act].Player, mode),
+            name=player,
+            x=data.loc[data.Player==player].Act,
+            y=data.loc[data.Player==player][f'{lineMode}'],
+            hovertemplate=get_hover_template(player, lineMode)
         ))
-    return fig 
+    
+    return update_y_axis(fig, mode) 
 
 
 def update_y_axis(fig, mode):
@@ -74,5 +75,12 @@ def update_y_axis(fig, mode):
             The updated figure
     '''
     # TODO : Update the y axis title according to the current mode
-    '''fig=draw(fig, fig.data[0], mode)'''
+    if mode=='Percent':
+        fig.update_layout(
+            yaxis_title='Lines (%)'
+        )
+    else:
+        fig.update_layout(
+            yaxis_title=f'Lines({mode})'
+        )
     return fig

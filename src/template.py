@@ -60,7 +60,6 @@ def create_template():
             hoverlabel=dict(
                 bgcolor=THEME['label_background_color'],
                 font_size=THEME['label_font_size']
-            ),
-            yaxis_title='Lines (Count)',
+            )
         )
     )
