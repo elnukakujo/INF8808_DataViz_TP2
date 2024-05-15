@@ -31,7 +31,7 @@ def init_figure():
             tickmode = 'array',
             tickvals = [1,2,3,4,5],
             ticktext = ['Act '+str(i) for i in range(1,6)]
-        )
+        ) # To add the acts under each category on the xaxis
     )
     return fig
 
@@ -49,10 +49,14 @@ def draw(fig, data, mode):
     '''
     fig = go.Figure(fig)  # conversion back to Graph Object
     # TODO : Update the figure's data according to the selected mode
+    
+    # We remove all previous data on the figure
     fig.data=[]
     lineMode = MODE_TO_COLUMN[f'{mode}']
-    playerList = data.loc[data.Act==1].Player
-        
+    # Create the list of all characters in the data
+    playerList = data.Player.unique()
+    
+    # Not Working :/
     for player in playerList:
         fig.add_trace(go.Bar(
             name=player,
@@ -61,6 +65,7 @@ def draw(fig, data, mode):
             hovertemplate=get_hover_template(player, lineMode)
         ))
     
+    # Update the y-axis legend
     return update_y_axis(fig, mode) 
 
 
