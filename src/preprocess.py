@@ -33,6 +33,9 @@ def summarize_lines(df):
     # The LinePercent is computed by dividing the LineCount by the sum of the lines in the act, multiplied by 100 to get the percents.
     df['LinePercent']=(df.groupby(['Act','Player']).sum(numeric_only=True)['LineCount']/
                             df.groupby('Act').sum(numeric_only=True)['LineCount']).reset_index()['LineCount']*100
+    
+    # Rounding here the percents, because I don't know how to round them ONLY in the hypertext
+    df['LinePercent']=df.LinePercent.round(2)
     return df
 
 
