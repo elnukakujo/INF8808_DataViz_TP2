@@ -20,15 +20,19 @@ def init_figure():
             fig: The figure which will display the bar chart
     '''
     fig = go.Figure()
-
+    
     # TODO : Update the template to include our new theme and set the title
-
     fig.update_layout(
-        template=pio.templates['simple_white'],
+        template=pio.templates["simple_white+mytemplate"], #To use our template with the simple_white template
         dragmode=False,
-        barmode='relative'
+        barmode='relative',
+        title='Lines per act',
+        xaxis = dict(
+            tickmode = 'array',
+            tickvals = [1,2,3,4,5],
+            ticktext = ['Act '+str(i) for i in range(1,6)]
+        ) # To add the acts under each category on the xaxis
     )
-
     return fig
 
 
@@ -45,7 +49,24 @@ def draw(fig, data, mode):
     '''
     fig = go.Figure(fig)  # conversion back to Graph Object
     # TODO : Update the figure's data according to the selected mode
-    return fig
+    
+    # We remove all previous data on the figure
+    fig.data=[]
+    lineMode = MODE_TO_COLUMN[f'{mode}']
+    # Create the list of all characters in the data
+    playerList = data.Player.unique()
+    
+    # Not Working :/
+    for player in playerList:
+        fig.add_trace(go.Bar(
+            name=player,
+            x=data.loc[data.Player==player].Act,
+            y=data.loc[data.Player==player][f'{lineMode}'],
+            hovertemplate=get_hover_template(player, lineMode)
+        ))
+    
+    # Update the y-axis legend
+    return update_y_axis(fig, mode) 
 
 
 def update_y_axis(fig, mode):
@@ -59,3 +80,12 @@ def update_y_axis(fig, mode):
             The updated figure
     '''
     # TODO : Update the y axis title according to the current mode
+    if mode=='Percent':
+        fig.update_layout(
+            yaxis_title='Lines (%)'
+        )
+    else:
+        fig.update_layout(
+            yaxis_title=f'Lines({mode})'
+        )
+    return fig
